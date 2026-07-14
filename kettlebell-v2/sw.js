@@ -1,5 +1,5 @@
-const CACHE='kb-coach-v7-1';
-const ASSETS=['./','./index.html','./styles.css','./program.js','./app.js','./direct-videos.js','./exercise-instructions.js','./enhancements.js','./v4-fix.js','./exercise-guide-ui.js','./adaptive-program.js','./routine-builder.js','./body-reports.js','./manifest.webmanifest','./icon.svg'];
+const CACHE='kb-coach-v7-2';
+const ASSETS=['./','./index.html','./styles.css','./program.js','./app.js','./direct-videos.js','./exercise-instructions.js','./enhancements.js','./v4-fix.js','./exercise-guide-ui.js','./adaptive-program.js','./routine-builder.js','./routine-builder-fix.js','./body-reports.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key))))));
 self.addEventListener('fetch',event=>event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response}).catch(()=>caches.match(event.request))));
