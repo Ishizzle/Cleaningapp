@@ -1,5 +1,4 @@
-// Connect Form Check to workout cards, the exercise library, guided workouts,
-// and the Progress dashboard.
+// Connect Form Check to workout cards, the exercise library, and Progress.
 (() => {
   const SUPPORTED_FORM_EXERCISES = new Set([
     'Goblet Squat',
@@ -60,19 +59,6 @@
     });
   }
 
-  function addGuidedButton() {
-    if (!state.activeWorkout) return;
-    const exercise = PROGRAM[state.activeWorkout.day]?.exercises?.[activeExercise];
-    const actionArea = document.querySelector('#guidedExerciseGuide .actions');
-    if (!exercise || !actionArea || !SUPPORTED_FORM_EXERCISES.has(exercise.name)) return;
-    if (actionArea.querySelector('.guided-camera-check')) return;
-    const button = document.createElement('button');
-    button.className = 'mini form-check-button guided-camera-check';
-    button.textContent = 'Camera form check';
-    button.onclick = () => openFormCheck(exercise.name);
-    actionArea.appendChild(button);
-  }
-
   function injectProgressDashboard() {
     if (document.getElementById('formCheckProgressBlock')) return;
     const progress = document.getElementById('progressView');
@@ -99,13 +85,12 @@
     const scored = history.filter(item => Number(item.averageScore));
     const totalReps = history.reduce((sum, item) => sum + (Number(item.reps) || 0), 0);
     const averageScore = scored.length ? Math.round(scored.reduce((sum, item) => sum + Number(item.averageScore), 0) / scored.length) : null;
-    const latestScore = scored[0]?.averageScore || null;
     const lastFive = scored.slice(0, 5);
     const priorFive = scored.slice(5, 10);
     const recentAverage = lastFive.length ? lastFive.reduce((sum, item) => sum + Number(item.averageScore), 0) / lastFive.length : null;
     const priorAverage = priorFive.length ? priorFive.reduce((sum, item) => sum + Number(item.averageScore), 0) / priorFive.length : null;
     const trend = recentAverage !== null && priorAverage !== null ? Math.round(recentAverage - priorAverage) : null;
-    return { history, totalReps, averageScore, latestScore, trend };
+    return { history, totalReps, averageScore, trend };
   }
 
   function exerciseBreakdown(history) {
@@ -156,12 +141,6 @@
     addWorkoutButtons();
     addLibraryButtons();
     renderProgressDashboard();
-  };
-
-  const previousRenderGuided = renderGuided;
-  renderGuided = function() {
-    previousRenderGuided();
-    addGuidedButton();
   };
 
   injectStyles();
