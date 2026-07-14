@@ -27,6 +27,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Validate JavaScript
+        run: |
+          set -e
+          for file in kettlebell-v2/*.js; do
+            node --check "$file"
+          done
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Prepare site
